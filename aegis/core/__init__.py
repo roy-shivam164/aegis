@@ -1,0 +1,1 @@
+"""aegis/core sub-package."""

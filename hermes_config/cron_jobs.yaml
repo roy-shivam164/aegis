@@ -1,0 +1,38 @@
+# AEGIS Heartbeat Cron Jobs
+# Place this file at ~/.hermes/cron_jobs.yaml
+# Hermes reads this file on startup to schedule recurring tasks.
+
+jobs:
+  - name: aegis-heartbeat
+    description: Run AEGIS proactive intelligence heartbeat cycle
+    schedule: "*/30 * * * *"   # Every 30 minutes
+    command: |
+      cd ~/aegis && python -c "
+      from aegis.proactive.heartbeat import HeartbeatEngine
+      import json
+      result = HeartbeatEngine().run_cycle()
+      print(json.dumps(result))
+      "
+    on_success: log
+    on_failure: notify
+
+  - name: aegis-pattern-distill
+    description: Distil user patterns from life log (daily)
+    schedule: "0 8 * * *"      # Every day at 8am
+    command: |
+      cd ~/aegis && python -c "
+      from aegis.brains.mirror_self import MirrorSelf
+      import json
+      patterns = MirrorSelf().distill_patterns()
+      print(f'Distilled {len(patterns)} patterns')
+      "
+    on_success: log
+    on_failure: log
+
+  - name: aegis-skill-tree-report
+    description: Weekly skill tree summary
+    schedule: "0 9 * * 1"      # Every Monday at 9am
+    command: |
+      cd ~/aegis && python -m aegis.brains.skillforge tree
+    on_success: notify
+    on_failure: log
