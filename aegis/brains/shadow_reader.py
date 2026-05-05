@@ -80,14 +80,14 @@ class ShadowReader:
             motive_signals: list[str] = existing.get("motive_signals", [])
             trust_score: float = existing.get("trust_score", 0.5)
             relationship: str = existing.get("relationship", "unknown")
-            profile_id: str = existing["id"]
+            profile_id: str | None = existing["id"]
         else:
             interaction_count = 1
             traits = []
             motive_signals = []
             trust_score = 0.5
             relationship = "unknown"
-            profile_id = None  # type: ignore[assignment]
+            profile_id = None
 
         # LLM-based motive inference
         new_motives = infer_motives(person_name, new_interaction_text)

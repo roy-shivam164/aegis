@@ -240,9 +240,7 @@ def check_appreciation(qdrant: QdrantManager) -> dict[str, Any] | None:
     """
     today_str = datetime.now(timezone.utc).date().isoformat()
     traces, _ = qdrant.client.scroll(
-        collection_name=qdrant.client._DEFAULT_COLLECTION_NAME  # type: ignore[attr-defined]
-        if False
-        else "failure_traces",
+        collection_name="failure_traces",
         scroll_filter=None,
         with_payload=True,
         limit=100,
